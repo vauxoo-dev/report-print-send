@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp import models, exceptions, _, api
+from lxml import etree
 
 
 class Report(models.Model):
@@ -82,6 +83,15 @@ class Report(models.Model):
         can_print_report = self._can_print_report(cr, uid, ids,
                                                   behaviour, printer, document,
                                                   context=context)
+        if report.usage == 'zebra' and printer:
+            arch = self.get_html(
+                cr, uid, ids, report_name, data=data, context=context)
+            tree = etree.fromstring(arch)
+            code = tree.xpath("//div[@class='code']")
+            res = code[0].text if code else ''
+            res = '\n'.join([l.strip() for l in res.split('\n') if l.strip()])
+            res += '\n'
+            return res
         if can_print_report:
             printer.print_document(report, document, report.report_type)
         return document
