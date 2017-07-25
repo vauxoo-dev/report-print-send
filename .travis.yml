@@ -8,6 +8,7 @@ addons:
       - python-lxml # because pip installation is slow
       - cups
       - libcups2-dev
+      - python-lxml
 
 language: python
 python:
@@ -31,6 +32,7 @@ install:
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
+  - pip install --upgrade lxml==3.6.4
 
 script:
   - travis_run_tests
