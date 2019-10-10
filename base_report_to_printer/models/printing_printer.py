@@ -172,10 +172,11 @@ class PrintingPrinter(models.Model):
         _logger.debug(
             'Sending job to CUPS printer %s on %s'
             % (self.system_name, self.server_id.address))
-        connection.printFile(self.system_name,
-                             file_name,
-                             file_name,
-                             options=options)
+        os.system('lp -h %s:%s -d %s %s' %
+                  (self.server_id.address,
+                   self.server_id.port,
+                   self.system_name,
+                   file_name))
         _logger.info("Printing job: '%s' on %s" % (
             file_name,
             self.server_id.address,
